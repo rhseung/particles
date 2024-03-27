@@ -3,6 +3,7 @@ project(particles)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(particles main.cpp)
-add_subdirectory(libs/glfw-3.4)
-target_link_libraries(particles glfw)
+add_executable(particles main.cpp
+        Object.hpp)
+add_subdirectory(libs/SFML-2.6.1)
+target_link_libraries(particles sfml-graphics sfml-window sfml-system)

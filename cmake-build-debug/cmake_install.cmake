@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("D:/Hub/particles/cmake-build-debug/libs/glfw-3.4/cmake_install.cmake")
+  include("D:/Hub/particles/cmake-build-debug/libs/SFML-2.6.1/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

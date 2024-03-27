@@ -500,3 +500,123 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckIncludeFile.cmake:90 (try_compile)"
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckTypeSize.cmake:250 (check_include_file)"
+      - "libs/SFML-2.6.1/cmake/Config.cmake:10 (check_type_size)"
+      - "libs/SFML-2.6.1/CMakeLists.txt:41 (include)"
+    checks:
+      - "Looking for sys/types.h"
+    directories:
+      source: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-qrshyy"
+      binary: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-qrshyy"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "D:/Hub/particles/libs/SFML-2.6.1/cmake/CompilerOptionsOverride.cmake"
+    buildResult:
+      variable: "HAVE_SYS_TYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-qrshyy'
+        
+        Run Build Command(s): "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/ninja/win/x64/ninja.exe" -v cmTC_24ede
+        [1/2] C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   -fdiagnostics-color=always -o CMakeFiles/cmTC_24ede.dir/CheckIncludeFile.c.obj -c D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-qrshyy/CheckIncludeFile.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   CMakeFiles/cmTC_24ede.dir/CheckIncludeFile.c.obj -o cmTC_24ede.exe -Wl,--out-implib,libcmTC_24ede.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckIncludeFile.cmake:90 (try_compile)"
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckTypeSize.cmake:251 (check_include_file)"
+      - "libs/SFML-2.6.1/cmake/Config.cmake:10 (check_type_size)"
+      - "libs/SFML-2.6.1/CMakeLists.txt:41 (include)"
+    checks:
+      - "Looking for stdint.h"
+    directories:
+      source: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-dwrlw8"
+      binary: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-dwrlw8"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "D:/Hub/particles/libs/SFML-2.6.1/cmake/CompilerOptionsOverride.cmake"
+    buildResult:
+      variable: "HAVE_STDINT_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-dwrlw8'
+        
+        Run Build Command(s): "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/ninja/win/x64/ninja.exe" -v cmTC_16261
+        [1/2] C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   -fdiagnostics-color=always -o CMakeFiles/cmTC_16261.dir/CheckIncludeFile.c.obj -c D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-dwrlw8/CheckIncludeFile.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   CMakeFiles/cmTC_16261.dir/CheckIncludeFile.c.obj -o cmTC_16261.exe -Wl,--out-implib,libcmTC_16261.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckIncludeFile.cmake:90 (try_compile)"
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckTypeSize.cmake:252 (check_include_file)"
+      - "libs/SFML-2.6.1/cmake/Config.cmake:10 (check_type_size)"
+      - "libs/SFML-2.6.1/CMakeLists.txt:41 (include)"
+    checks:
+      - "Looking for stddef.h"
+    directories:
+      source: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-gm8t4x"
+      binary: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-gm8t4x"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "D:/Hub/particles/libs/SFML-2.6.1/cmake/CompilerOptionsOverride.cmake"
+    buildResult:
+      variable: "HAVE_STDDEF_H"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-gm8t4x'
+        
+        Run Build Command(s): "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/ninja/win/x64/ninja.exe" -v cmTC_44887
+        [1/2] C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   -fdiagnostics-color=always -o CMakeFiles/cmTC_44887.dir/CheckIncludeFile.c.obj -c D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-gm8t4x/CheckIncludeFile.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   CMakeFiles/cmTC_44887.dir/CheckIncludeFile.c.obj -o cmTC_44887.exe -Wl,--out-implib,libcmTC_44887.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckTypeSize.cmake:146 (try_compile)"
+      - "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/cmake/win/x64/share/cmake-3.28/Modules/CheckTypeSize.cmake:271 (__check_type_size_impl)"
+      - "libs/SFML-2.6.1/cmake/Config.cmake:10 (check_type_size)"
+      - "libs/SFML-2.6.1/CMakeLists.txt:41 (include)"
+    checks:
+      - "Check size of void*"
+    directories:
+      source: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ew17is"
+      binary: "D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ew17is"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "D:/Hub/particles/libs/SFML-2.6.1/cmake/CompilerOptionsOverride.cmake"
+    buildResult:
+      variable: "HAVE_SIZEOF_VOID_PTR"
+      cached: true
+      stdout: |
+        Change Dir: 'D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ew17is'
+        
+        Run Build Command(s): "C:/Users/rhseung/AppData/Local/Programs/CLion Nova/bin/ninja/win/x64/ninja.exe" -v cmTC_28ca8
+        [1/2] C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   -fdiagnostics-color=always -o CMakeFiles/cmTC_28ca8.dir/SIZEOF_VOID_PTR.c.obj -c D:/Hub/particles/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-ew17is/SIZEOF_VOID_PTR.c
+        [2/2] C:\\Windows\\system32\\cmd.exe /C "cd . && C:\\Users\\rhseung\\AppData\\Local\\Programs\\CLIONN~1\\bin\\mingw\\bin\\gcc.exe   CMakeFiles/cmTC_28ca8.dir/SIZEOF_VOID_PTR.c.obj -o cmTC_28ca8.exe -Wl,--out-implib,libcmTC_28ca8.dll.a -Wl,--major-image-version,0,--minor-image-version,0  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 && cd ."
+        
+      exitCode: 0
+...
