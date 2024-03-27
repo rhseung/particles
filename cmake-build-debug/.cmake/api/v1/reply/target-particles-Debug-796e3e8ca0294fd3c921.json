@@ -220,7 +220,8 @@
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				1
+				1,
+				2
 			]
 		}
 	],
@@ -234,7 +235,12 @@
 		},
 		{
 			"backtrace" : 1,
-			"path" : "Object.hpp",
+			"path" : "libs/object.hpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "libs/renderer.hpp",
 			"sourceGroupIndex" : 1
 		}
 	],

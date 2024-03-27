@@ -1,33 +1,35 @@
 #include <SFML/Graphics.hpp>
+#include <event_manager.hpp>
 #include <iostream>
 
-#include "Object.hpp"
+#include "libs/object.hpp"
+#include "libs/renderer.hpp"
 
 int main() {
+    constexpr int32_t width = 800;
+    constexpr int32_t height = 600;
+    constexpr int32_t fps = 60;
+
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
 
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML works!", sf::Style::Default, settings);
+    sf::RenderWindow window(sf::VideoMode(width, height), "Space", sf::Style::Default, settings);
     window.setFramerateLimit(60);
 
-    Object obj({400.f, 300.f}, 50.f);
+    sfev::EventManager event_manager(window, true);
+    event_manager.addEventCallback(sf::Event::Closed, [&](const sf::Event&) { window.close(); });
+    event_manager.addKeyPressedCallback(sf::Keyboard::Escape, [&](const sf::Event&) { window.close(); });
+
+    pt::Renderer renderer(window);
+
+    renderer.add(pt::Circle({400.f, 300.f}, 50.f));
+    renderer.add(pt::Circle({250.f, 150.f}, 30.f));
 
     while (window.isOpen()) {
-        sf::Event event;
+        event_manager.processEvents();
 
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-                window.close();
-        }
-
-        window.clear(sf::Color::White);
-
-        sf::CircleShape circle(obj.getRadius());
-        circle.setPosition(obj.getPosition());
-        circle.setFillColor(obj.getColor());
-
-        window.draw(circle);
-
+        window.clear(sf::Color::Black);
+        renderer.render();
         window.display();
     }
 
