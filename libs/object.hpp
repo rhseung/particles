@@ -7,66 +7,54 @@
 #include <SFML/Graphics.hpp>
 
 namespace pt {
-    // template <typename T> requires std::is_base_of_v<sf::Drawable, T>
-    class Object {
-    public:
-        virtual ~Object() = default;
+class Object {
+ public:
+    sf::Vector2f pos;
+    sf::Vector2f pos_0;
+    sf::Vector2f acc;
+    sf::Color color = sf::Color::White;
 
-        sf::Vector2f pos;
-        sf::Vector2f pos_0;
-        sf::Vector2f acc;
-        sf::Color color = sf::Color::White;
+    explicit Object(const sf::Vector2f position): pos{position}, pos_0{position}, acc{0.f, 0.f} {}
 
-        void create(const sf::Vector2f position) {
-            pos = position;
-            pos_0 = position;
-            acc = {0.f, 0.f};
-        }
+    void update(const float dt) {
+        const sf::Vector2f delta_x = pos - pos_0;
 
-        void update(const float dt) {
-            const sf::Vector2f delta_x = pos - pos_0;
+        pos_0 = pos;
+        pos = pos + delta_x + 0.5f * acc * dt * dt;
+        acc = {};
+    }
 
-            pos_0 = pos;
-            pos = pos + delta_x + 0.5f * acc * dt * dt;
+    void add_acc(const sf::Vector2f a) {
+        acc += a;
+    }
 
-            acc = {};
-        }
+    void set_vel(const sf::Vector2f v, const float dt) {
+        pos_0 = pos - v * dt;
+    }
 
-        void accelerate(const sf::Vector2f a) {
-            acc += a;
-        }
+    void add_vel(const sf::Vector2f v, const float dt) {
+        pos_0 -= v * dt;
+    }
 
-        void setVelocity(const sf::Vector2f v, const float dt) {
-            pos_0 = pos - v * dt;
-        }
+    [[nodiscard]] sf::Vector2f vel(const float dt) const {
+        return (pos - pos_0) / dt;
+    }
 
-        void addVelocity(const sf::Vector2f v, const float dt) {
-            pos_0 -= v * dt;
-        }
+    virtual sf::Drawable* render() = 0;
+};
 
-        [[nodiscard]] sf::Vector2f getVelocity(const float dt) const {
-            return (pos - pos_0) / dt;
-        }
+class Circle : public Object {
+ public:
+    float radius = 10.f;
 
-        // abstract method 'draw'
-        sf::CircleShape draw();
-    };
+    Circle(const sf::Vector2f position, const float radius): Object(position), radius{radius} {}
 
-    class Circle : public Object {
-    public:
-        float radius = 10.f;
+    sf::Drawable* render() override {
+        auto* circle = new sf::CircleShape(radius);
+        circle->setPosition(pos);
+        circle->setFillColor(color);
 
-        Circle(const sf::Vector2f position, const float radius) {
-            create(position);
-            this->radius = radius;
-        }
-
-        sf::CircleShape draw() {
-            sf::CircleShape circle(radius);
-            circle.setPosition(pos);
-            circle.setFillColor(color);
-
-            return circle;
-        }
-    };
+        return circle;
+    }
+};
 }
