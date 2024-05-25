@@ -178,8 +178,8 @@
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "D:/Hub/particles/cmake-build-debug",
-		"source" : "D:/Hub/particles"
+		"build" : "D:/code-hub/particles/cmake-build-debug",
+		"source" : "D:/code-hub/particles"
 	},
 	"version" : 
 	{

@@ -6,7 +6,6 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace pt {
 class Object {
  public:
     sf::Vector2f pos;
@@ -24,15 +23,15 @@ class Object {
         acc = {};
     }
 
-    void add_acc(const sf::Vector2f a) {
+    void accelerate(const sf::Vector2f a) {
         acc += a;
     }
 
-    void set_vel(const sf::Vector2f v, const float dt) {
+    void set_velocity(const sf::Vector2f v, const float dt) {
         pos_0 = pos - v * dt;
     }
 
-    void add_vel(const sf::Vector2f v, const float dt) {
+    void add_velocity(const sf::Vector2f v, const float dt) {
         pos_0 -= v * dt;
     }
 
@@ -43,18 +42,18 @@ class Object {
     virtual sf::Drawable* render() = 0;
 };
 
-class Circle : public Object {
+class CircleObject : public Object {
  public:
     float radius = 10.f;
-
-    Circle(const sf::Vector2f position, const float radius): Object(position), radius{radius} {}
+    CircleObject(const sf::Vector2f position, const float radius): Object{position}, radius{radius} {}
 
     sf::Drawable* render() override {
         auto* circle = new sf::CircleShape(radius);
+        circle->setPointCount(32);
+        circle->setOrigin(radius, radius);
         circle->setPosition(pos);
         circle->setFillColor(color);
 
         return circle;
     }
 };
-}

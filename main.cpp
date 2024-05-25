@@ -1,8 +1,11 @@
 #include <cmath>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+
 #include "solver.hpp"
 #include "renderer.hpp"
+#include "object.hpp"
+#include "constraints.hpp"
 #include "utils/number_generator.hpp"
 #include "utils/math.hpp"
 
@@ -15,7 +18,7 @@ static sf::Color getRainbow(float t) {
             static_cast<uint8_t>(255.0f * b * b)};
 }
 
-int32_t main(int32_t, char *[]) {
+int main() {
     // Create window
     constexpr int32_t window_width = 1000;
     constexpr int32_t window_height = 1000;
@@ -30,7 +33,9 @@ int32_t main(int32_t, char *[]) {
     Renderer renderer{window};
 
     // Solver configuration
-    solver.setConstraint({static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, 450.0f);
+    solver.addConstraint(new CircleConstraint(
+        {static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, 350.0f)
+    );
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -55,8 +60,7 @@ int32_t main(int32_t, char *[]) {
 
         if (solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
             clock.restart();
-            auto
-                &object = solver.addObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius));
+            auto &object = solver.addObject(new CircleObject(object_spawn_position, RNGf::getRange(object_min_radius, object_max_radius)));
             const float t = solver.getTime();
             const float angle = max_angle * std::sin(t) + Math::PI * 0.5f;
             solver.setObjectVelocity(object, object_spawn_speed * sf::Vector2f{std::cos(angle), std::sin(angle)});
