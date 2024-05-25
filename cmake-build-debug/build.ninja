@@ -49,8 +49,8 @@ cmake_ninja_workdir = D$:/code-hub/particles/cmake-build-debug/
 
 build cmake_object_order_depends_target_particles: phony || CMakeFiles/particles.dir
 
-build CMakeFiles/particles.dir/main.cpp.obj: CXX_COMPILER__particles_unscanned_Debug D$:/code-hub/particles/main.cpp || cmake_object_order_depends_target_particles
-  DEP_FILE = CMakeFiles\particles.dir\main.cpp.obj.d
+build CMakeFiles/particles.dir/two_objects.cpp.obj: CXX_COMPILER__particles_unscanned_Debug D$:/code-hub/particles/two_objects.cpp || cmake_object_order_depends_target_particles
+  DEP_FILE = CMakeFiles\particles.dir\two_objects.cpp.obj.d
   FLAGS = -g -std=gnu++20 -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\particles.dir
   OBJECT_FILE_DIR = CMakeFiles\particles.dir
@@ -63,7 +63,7 @@ build CMakeFiles/particles.dir/main.cpp.obj: CXX_COMPILER__particles_unscanned_D
 #############################################
 # Link the executable particles.exe
 
-build particles.exe: CXX_EXECUTABLE_LINKER__particles_Debug CMakeFiles/particles.dir/main.cpp.obj | C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-graphics-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-audio-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-window-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-network-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-system-d.a
+build particles.exe: CXX_EXECUTABLE_LINKER__particles_Debug CMakeFiles/particles.dir/two_objects.cpp.obj | C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-graphics-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-audio-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-window-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-network-d.a C$:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-system-d.a
   FLAGS = -g
   LINK_LIBRARIES = C:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-graphics-d.a  C:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-audio-d.a  C:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-window-d.a  C:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-network-d.a  C:/Users/rhseung/AppData/Local/Programs/CLion/bin/mingw/lib/libsfml-system-d.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\particles.dir

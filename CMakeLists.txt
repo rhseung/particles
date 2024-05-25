@@ -3,7 +3,9 @@ project(particles)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(particles main.cpp)
+add_executable(particles
+#        circle.cpp
+        two_objects.cpp)
 
 # SFML
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)

@@ -153,7 +153,7 @@ class Solver {
     void applyConstraint() {
         for (Object *obj : m_objects) {
             for (Constraint *constraint : m_constraints) {
-                constraint->apply(obj);
+                constraint->apply(obj, getStepDt());
             }
         }
     }

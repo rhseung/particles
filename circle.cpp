@@ -20,8 +20,8 @@ static sf::Color getRainbow(float t) {
 
 int main() {
     // Create window
-    constexpr int32_t window_width = 1000;
-    constexpr int32_t window_height = 1000;
+    constexpr int window_width = 1000;
+    constexpr int window_height = 800;
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
@@ -36,6 +36,9 @@ int main() {
     solver.addConstraint(new CircleConstraint(
         {static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, 350.0f)
     );
+    // 원 중앙에 가로막는 wall
+    solver.addConstraint(new WallConstraint({static_cast<float>(window_width) * 0.5f - 40.f, static_cast<float>(window_height) * 0.5f + 40.f}, 80.f, static_cast<float>(window_height)));
+
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -45,7 +48,7 @@ int main() {
     const sf::Vector2f object_spawn_position = {500.0f, 200.0f};
     const float object_min_radius = 1.0f;
     const float object_max_radius = 20.0f;
-    const uint32_t max_objects_count = 1000;
+    const uint32_t max_objects_count = 800;
     const float max_angle = 1.0f;
 
     sf::Clock clock;
