@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "object.hpp"
-#include "utils/math.hpp"
+#include "../utils/math.hpp"
 
 class Constraint {
  public:
@@ -114,8 +114,37 @@ class WallConstraint : public Constraint {
                 const sf::Vector2f u = dx / dist;
                 circle->pos = closest + u * circle->radius;
 
+                // TODO: 반발계수 설정 근데 반발계수는 벽이 아니라 물체가 결정하는 것.
                 const sf::Vector2f v = circle->vel(dt);
-                circle->set_velocity(v - 2.f * (v * u)*u, dt);
+                circle->set_velocity(v - 2.f * (v*u) * u, dt);  // TODO: 테스트
+            }
+
+            // TODO: 벽 안으로 들어가면 무조건 뛰쳐나오게
+        }
+        else if (auto* rect = dynamic_cast<RectangleObject*>(obj)) {
+            const sf::Vector2f pos = rect->pos;
+            const sf::Vector2f half_size = {width * 0.5f, height * 0.5f};
+            const sf::Vector2f top_right = top_left + sf::Vector2f{width, 0.f};
+            const sf::Vector2f bottom_left = top_left + sf::Vector2f{0.f, height};
+            const sf::Vector2f bottom_right = top_left + sf::Vector2f{width, height};
+
+            const sf::Vector2f closest = {
+                std::clamp(pos.x, top_left.x, top_right.x),
+                std::clamp(pos.y, top_left.y, bottom_left.y)
+            };
+
+            const sf::Vector2f dx = pos - closest;
+            const float dist = std::abs(dx);
+
+            // Check if the circle is inside the rectangle
+            // If it is, circle bounce off the rectangle and reflect the velocity using position because of verlet integration
+            if (dist < rect->width * 0.5f) {
+                const sf::Vector2f u = dx / dist;
+                rect->pos = closest + u * (rect->width * 0.5f);
+
+                // 튕겨나오게
+                const sf::Vector2f v = rect->vel(dt);
+                rect->set_velocity(v - 2.f * (v*u) * u, dt);
             }
         }
     }

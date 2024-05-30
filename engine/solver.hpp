@@ -4,7 +4,7 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
-#include "utils/math.hpp"
+#include "../utils/math.hpp"
 #include "object.hpp"
 #include "constraints.hpp"
 
@@ -113,7 +113,7 @@ class Solver {
     std::vector<Constraint*> m_constraints;
 
     uint32_t m_sub_steps = 1;
-    sf::Vector2f m_gravity = {0.0f, 1000.0f};
+    sf::Vector2f m_gravity = {0.0f, 1500.0f};
     float m_time = 0.0f;
     float m_frame_dt = 0.0f;
 
@@ -126,28 +126,48 @@ class Solver {
     void checkCollisions(float dt) {
         const float response_coef = 0.75f;
         const uint64_t objects_count = m_objects.size();
-        // Iterate on all objects
-        for (uint64_t i{0}; i < objects_count; ++i) {
-            auto &object_1 = dynamic_cast<CircleObject &>(*m_objects[i]);
-            // Iterate on object involved in new collision pairs
-            for (uint64_t k{i + 1}; k < objects_count; ++k) {
-                auto &object_2 = dynamic_cast<CircleObject &>(*m_objects[k]);
-                const sf::Vector2f v = object_1.pos - object_2.pos;
-                const float dist2 = v.x * v.x + v.y * v.y;
-                const float min_dist = object_1.radius + object_2.radius;
-                // Check overlapping
-                if (dist2 < min_dist * min_dist) {
-                    const float dist = std::sqrt(dist2);
-                    const sf::Vector2f n = v / dist;
-                    const float mass_ratio_1 = object_1.radius / (object_1.radius + object_2.radius);
-                    const float mass_ratio_2 = object_2.radius / (object_1.radius + object_2.radius);
-                    const float delta = 0.5f * response_coef * (dist - min_dist);
-                    // Update positions
-                    object_1.pos -= n * (mass_ratio_2 * delta);
-                    object_2.pos += n * (mass_ratio_1 * delta);
+
+        for (int i = 0; i < objects_count; ++i) {
+            for (int j = i + 1; j < objects_count; ++j) {
+                auto box1 = m_objects[i]->box;
+                auto box2 = m_objects[j]->box;
+                auto overlap = OBB::overlap(box1, box2);
+                if (overlap.penetration > 0) {
+                    const sf::Vector2f n = Math::normalize(overlap.axis);
+                    const float mass_ratio_1 = m_objects[i]->mass / (m_objects[i]->mass + m_objects[j]->mass);
+                    const float mass_ratio_2 = m_objects[j]->mass / (m_objects[i]->mass + m_objects[j]->mass);
+                    const float delta = 0.5f * response_coef * overlap.penetration;
+
+                    m_objects[i]->pos -= n * (mass_ratio_2 * delta);
+                    m_objects[j]->pos += n * (mass_ratio_1 * delta);
                 }
             }
         }
+
+        // TODO: 원은 반지름으로 계산하는게 더 나음
+        //  - 모양에 따른 collsion detection type를 나누자.
+
+//        for (uint64_t i{0}; i < objects_count; ++i) {
+//            auto &object_1 = dynamic_cast<CircleObject &>(*m_objects[i]);
+//            // Iterate on object involved in new collision pairs
+//            for (uint64_t k{i + 1}; k < objects_count; ++k) {
+//                auto &object_2 = dynamic_cast<CircleObject &>(*m_objects[k]);
+//                const sf::Vector2f v = object_1.pos - object_2.pos;
+//                const float dist2 = v.x * v.x + v.y * v.y;
+//                const float min_dist = object_1.radius + object_2.radius;
+//                // Check overlapping
+//                if (dist2 < min_dist * min_dist) {
+//                    const float dist = std::sqrt(dist2);
+//                    const sf::Vector2f n = v / dist;
+//                    const float mass_ratio_1 = object_1.mass / (object_1.mass + object_2.mass);
+//                    const float mass_ratio_2 = object_2.mass / (object_1.mass + object_2.mass);
+//                    const float delta = 0.5f * response_coef * (dist - min_dist);
+//                    // Update positions
+//                    object_1.pos -= n * (mass_ratio_2 * delta);
+//                    object_2.pos += n * (mass_ratio_1 * delta);
+//                }
+//            }
+//        }
     }
 
     void applyConstraint() {

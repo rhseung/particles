@@ -4,6 +4,13 @@
 
 struct Math {
     static constexpr float PI = 3.1415936f;
+
+    // normalize
+    template <typename T>
+    static sf::Vector2<T> normalize(const sf::Vector2<T> &v) {
+        const float length = std::sqrt(v.x * v.x + v.y * v.y);
+        return {v.x / length, v.y / length};
+    }
 };
 
 namespace std {
@@ -14,6 +21,16 @@ namespace std {
 }
 
 template <typename T>
-inline sf::Vector2<T> operator*(const sf::Vector2<T> &lhs, const sf::Vector2<T> &rhs) {
-    return {lhs.x * rhs.x, lhs.y * rhs.y};
+inline T operator*(const sf::Vector2<T> &lhs, const sf::Vector2<T> &rhs) {
+    return lhs.x * rhs.x + lhs.y * rhs.y;
+}
+
+template <typename T>
+T dot(const sf::Vector2<T> &lhs, const sf::Vector2<T> &rhs) {
+    return lhs.x * rhs.x + lhs.y * rhs.y;
+}
+
+template <typename T>
+T cross(const sf::Vector2<T> &lhs, const sf::Vector2<T> &rhs) {
+    return lhs.x * rhs.y - lhs.y * rhs.x;
 }

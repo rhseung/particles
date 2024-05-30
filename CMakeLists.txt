@@ -5,7 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(particles
 #        circle.cpp
-        two_objects.cpp)
+#        performance_test.cpp
+#        two_objects.cpp
+        shape_test.cpp
+)
 
 # SFML
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
