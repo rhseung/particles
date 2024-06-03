@@ -5,65 +5,99 @@
 #include <SFML/Graphics.hpp>
 
 #include "../utils/math.hpp"
-#include "object.hpp"
+//#include "object.hpp"
 #include "constraints.hpp"
-
-struct VerletObject {
-    sf::Vector2f position;
-    sf::Vector2f position_last;
-    sf::Vector2f acceleration;
-    float radius = 10.0f;
-    sf::Color color = sf::Color::White;
-
-    VerletObject() = default;
-    VerletObject(sf::Vector2f position_, float radius_)
-        : position{position_}, position_last{position_}, acceleration{0.0f, 0.0f}, radius{radius_} {}
-
-    void update(float dt) {
-        // Compute how much we moved
-        const sf::Vector2f displacement = position - position_last;
-        // Update position
-        position_last = position;
-        position = position + displacement + acceleration * (dt * dt);
-        // Reset acceleration
-        acceleration = {};
-    }
-
-    void accelerate(sf::Vector2f a) {
-        acceleration += a;
-    }
-
-    void setVelocity(sf::Vector2f v, float dt) {
-        position_last = position - (v * dt);
-    }
-
-    void addVelocity(sf::Vector2f v, float dt) {
-        position_last -= v * dt;
-    }
-
-    [[nodiscard]]
-    sf::Vector2f getVelocity(float dt) const {
-        return (position - position_last) / dt;
-    }
-};
+#include "common/Body.hpp"
+#include "Collisions.hpp"
 
 class Solver {
+ private:
+    List<Body*> body_list;
+    List<Constraint*> constraint_list;
+
+    unsigned int sub_steps = 1;
+    sf::Vector2f gravity = {0.0f, 1500.0f};
+    float m_time = 0.0f;
+    float m_frame_dt = 0.0f;
+
+    void apply_gravity() {
+        for (auto &obj : body_list) {
+            obj->accelerate(gravity);
+        }
+    }
+
+    void check_collisions(float dt) {
+        for (unsigned int i = 0; i < body_list.size(); i++) {
+            for (unsigned int j = i + 1; j < body_list.size(); j++) {
+                if (body_list[i]->shape == ShapeType::CIRCLE) {
+                    auto obj1 = dynamic_cast<CircleBody*>(body_list[i]);
+
+                    if (body_list[j]->shape == ShapeType::CIRCLE) {
+                        auto obj2 = dynamic_cast<CircleBody*>(body_list[j]);
+
+                        Manifold manifold;
+                        if (Collisions::intersect_circles(obj1->position, obj1->radius, obj2->position, obj2->radius, manifold)) {
+                            float mass_sum = obj1->mass() + obj2->mass();
+                            float obj1_ratio = obj1->mass() / mass_sum;
+                            float obj2_ratio = obj2->mass() / mass_sum;
+
+                            obj1->move(-manifold.normal * 0.5f * manifold.depth * obj1_ratio);
+                            obj2->move(manifold.normal * 0.5f * manifold.depth * obj2_ratio);
+                        }
+                    }
+                }
+                else if (body_list[i]->shape == ShapeType::POLYGON) {
+                    auto obj1 = dynamic_cast<PolygonBody*>(body_list[i]);
+
+                    if (body_list[j]->shape == ShapeType::POLYGON) {
+                        auto obj2 = dynamic_cast<PolygonBody*>(body_list[j]);
+
+                        Manifold manifold;
+                        if (Collisions::intersect_polys(obj1->position, obj1->vertices, obj2->position, obj2->vertices, manifold)) {
+                            float mass_sum = obj1->mass() + obj2->mass();
+                            float obj1_ratio = obj1->mass() / mass_sum;
+                            float obj2_ratio = obj2->mass() / mass_sum;
+
+                            obj1->move(-manifold.normal * 0.5f * manifold.depth * obj1_ratio);
+                            obj2->move(manifold.normal * 0.5f * manifold.depth * obj2_ratio);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void apply_constraints() {
+        for (Body *obj : body_list) {
+            for (Constraint *constraint : constraint_list) {
+                constraint->apply(obj, getStepDt());
+            }
+        }
+    }
+
+    void update_bodies(float dt) {
+        for (auto &obj : body_list) {
+            obj->update(dt);
+        }
+    }
  public:
     Solver() = default;
+    Solver(Vec2 gravity): gravity{gravity} {}
 
-    Object& addObject(Object* obj) {
-        m_objects.push_back(obj);
+    Body& addBody(Body* obj) {
+        body_list.push_back(obj);
         return *obj;
     }
 
     void update() {
         m_time += m_frame_dt;
         const float step_dt = getStepDt();
-        for (uint32_t i{m_sub_steps}; i--;) {
-            applyGravity();
-            checkCollisions(step_dt);
-            applyConstraint();
-            updateObjects(step_dt);
+
+        for (unsigned int i = sub_steps; i--;) {
+            apply_gravity();
+            check_collisions(step_dt);
+            apply_constraints();
+            update_bodies(step_dt);
         }
     }
 
@@ -72,30 +106,30 @@ class Solver {
     }
 
     void addConstraint(Constraint* constraint) {
-        m_constraints.push_back(constraint);
+        constraint_list.push_back(constraint);
     }
 
     void setSubStepsCount(uint32_t sub_steps) {
-        m_sub_steps = sub_steps;
+        sub_steps = sub_steps;
     }
 
-    void setObjectVelocity(Object &object, sf::Vector2f v) const {
-        object.set_velocity(v, getStepDt());
+    void setObjectVelocity(Body &object, sf::Vector2f v) const {
+        object.velocity = v;
     }
 
     [[nodiscard]]
-    const std::vector<Object*> &getObjects() const {
-        return m_objects;
+    const std::vector<Body*> &getObjects() const {
+        return body_list;
     }
 
     [[nodiscard]]
     const std::vector<Constraint*> &getConstraints() const {
-        return m_constraints;
+        return constraint_list;
     }
 
     [[nodiscard]]
     uint64_t getObjectsCount() const {
-        return m_objects.size();
+        return body_list.size();
     }
 
     [[nodiscard]]
@@ -105,82 +139,6 @@ class Solver {
 
     [[nodiscard]]
     float getStepDt() const {
-        return m_frame_dt / static_cast<float>(m_sub_steps);
-    }
-
- private:
-    std::vector<Object*> m_objects;
-    std::vector<Constraint*> m_constraints;
-
-    uint32_t m_sub_steps = 1;
-    sf::Vector2f m_gravity = {0.0f, 1500.0f};
-    float m_time = 0.0f;
-    float m_frame_dt = 0.0f;
-
-    void applyGravity() {
-        for (auto &obj : m_objects) {
-            obj->accelerate(m_gravity);
-        }
-    }
-
-    void checkCollisions(float dt) {
-        const float response_coef = 0.75f;
-        const uint64_t objects_count = m_objects.size();
-
-        for (int i = 0; i < objects_count; ++i) {
-            for (int j = i + 1; j < objects_count; ++j) {
-                auto box1 = m_objects[i]->box;
-                auto box2 = m_objects[j]->box;
-                auto overlap = OBB::overlap(box1, box2);
-                if (overlap.penetration > 0) {
-                    const sf::Vector2f n = Math::normalize(overlap.axis);
-                    const float mass_ratio_1 = m_objects[i]->mass / (m_objects[i]->mass + m_objects[j]->mass);
-                    const float mass_ratio_2 = m_objects[j]->mass / (m_objects[i]->mass + m_objects[j]->mass);
-                    const float delta = 0.5f * response_coef * overlap.penetration;
-
-                    m_objects[i]->pos -= n * (mass_ratio_2 * delta);
-                    m_objects[j]->pos += n * (mass_ratio_1 * delta);
-                }
-            }
-        }
-
-        // TODO: 원은 반지름으로 계산하는게 더 나음
-        //  - 모양에 따른 collsion detection type를 나누자.
-
-//        for (uint64_t i{0}; i < objects_count; ++i) {
-//            auto &object_1 = dynamic_cast<CircleObject &>(*m_objects[i]);
-//            // Iterate on object involved in new collision pairs
-//            for (uint64_t k{i + 1}; k < objects_count; ++k) {
-//                auto &object_2 = dynamic_cast<CircleObject &>(*m_objects[k]);
-//                const sf::Vector2f v = object_1.pos - object_2.pos;
-//                const float dist2 = v.x * v.x + v.y * v.y;
-//                const float min_dist = object_1.radius + object_2.radius;
-//                // Check overlapping
-//                if (dist2 < min_dist * min_dist) {
-//                    const float dist = std::sqrt(dist2);
-//                    const sf::Vector2f n = v / dist;
-//                    const float mass_ratio_1 = object_1.mass / (object_1.mass + object_2.mass);
-//                    const float mass_ratio_2 = object_2.mass / (object_1.mass + object_2.mass);
-//                    const float delta = 0.5f * response_coef * (dist - min_dist);
-//                    // Update positions
-//                    object_1.pos -= n * (mass_ratio_2 * delta);
-//                    object_2.pos += n * (mass_ratio_1 * delta);
-//                }
-//            }
-//        }
-    }
-
-    void applyConstraint() {
-        for (Object *obj : m_objects) {
-            for (Constraint *constraint : m_constraints) {
-                constraint->apply(obj, getStepDt());
-            }
-        }
-    }
-
-    void updateObjects(float dt) {
-        for (auto &obj : m_objects) {
-            obj->update(dt);
-        }
+        return m_frame_dt / static_cast<float>(sub_steps);
     }
 };

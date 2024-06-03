@@ -28,6 +28,9 @@ int main() {
     solver.addConstraint(new WallConstraint({static_cast<float>(window_width) - 50.f, 0.f}, 50.f, static_cast<float>(window_height)));
     solver.addConstraint(new WallConstraint({0.f, 0.f}, static_cast<float>(window_width), 50.f));
     solver.addConstraint(new WallConstraint({0.f, static_cast<float>(window_height) - 50.f}, static_cast<float>(window_width), 50.f));
+    solver.addConstraint(new CircleConstraint(
+        {static_cast<float>(window_width) * 0.5f, static_cast<float>(window_height) * 0.5f}, 350.0f)
+    );
     solver.setSubStepsCount(8);
     solver.setSimulationUpdateRate(frame_rate);
 
@@ -84,7 +87,7 @@ int main() {
         }
 
         solver.update();
-        window.clear(sf::Color::Black);
+        window.clear(sf::Color::White);
         renderer.render(solver);
         window.display();
     }
