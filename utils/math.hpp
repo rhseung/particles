@@ -7,7 +7,9 @@ struct Math {
 
     template <typename T>
     static sf::Vector2<T> normalize(const sf::Vector2<T> v) {
-        const float length = std::sqrt(v.x * v.x + v.y * v.y);
+        float length = std::sqrt(v.x * v.x + v.y * v.y);
+        if (length == 0)
+            length = 1;
         return {v.x / length, v.y / length};
     }
 
@@ -35,6 +37,13 @@ struct Math {
         return vertex;
     }
 };
+
+// ostream vector
+template <typename T>
+std::ostream& operator<<(std::ostream& os, sf::Vector2<T> v) {
+    os << "(" << v.x << ", " << v.y << ")";
+    return os;
+}
 
 namespace std {
     template <typename T>
