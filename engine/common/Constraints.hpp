@@ -19,14 +19,14 @@ class CircleConstraint : public Constraint {
     CircleConstraint(const sf::Vector2f position, const float radius): pos{position}, radius{radius} {}
 
     void apply(Body* &obj, float dt) override {
-        if (obj->shape == ShapeType::CIRCLE) {
+        if (obj->shape() == ShapeType::CIRCLE) {
             auto circle = dynamic_cast<CircleBody*>(obj);
 
-            const sf::Vector2f dx = pos - circle->position;
+            const sf::Vector2f dx = pos - circle->position();
             const float dist = std::abs(dx);
-            if (dist > (radius - circle->radius)) {
+            if (dist > (radius - circle->radius())) {
                 const sf::Vector2f u = dx / dist;
-                circle->position = pos - u * (radius - circle->radius);
+                circle->moveTo(pos - u * (radius - circle->radius()));
             }
         }
     }
@@ -45,9 +45,9 @@ class CircleConstraint : public Constraint {
 //class BoxConstraint : public Constraint {
 // public:
 //    sf::Vector2f top_left;
-//    float width;
-//    float height;
-//    BoxConstraint(const sf::Vector2f top_left, const float width, const float height): top_left{top_left}, width{width}, height{height} {}
+//    float m_width;
+//    float m_height;
+//    BoxConstraint(const sf::Vector2f top_left, const float m_width, const float m_height): top_left{top_left}, m_width{m_width}, m_height{m_height} {}
 //
 //    void apply(Body* &obj, float dt) override {
 //        if (auto* circle = dynamic_cast<CircleObject*>(obj)) {
@@ -55,8 +55,8 @@ class CircleConstraint : public Constraint {
 //            const float radius = circle->radius;
 //
 //            const sf::Vector2f closest = {
-//                std::clamp(pos.x, top_left.x, top_left.x + width),
-//                std::clamp(pos.y, top_left.y, top_left.y + height)
+//                std::clamp(pos.x, top_left.x, top_left.x + m_width),
+//                std::clamp(pos.y, top_left.y, top_left.y + m_height)
 //            };
 //
 //            const sf::Vector2f dx = pos - closest;
@@ -74,9 +74,9 @@ class CircleConstraint : public Constraint {
 //    }
 //
 //    sf::Drawable* render() override {
-//        auto* rect = new sf::RectangleShape({width, height});
-//        rect->setOrigin(width / 2.0f, height / 2.0f);
-//        rect->setPosition(top_left.x + width / 2.0f, top_left.y + height / 2.0f);
+//        auto* rect = new sf::RectangleShape({m_width, m_height});
+//        rect->setOrigin(m_width / 2.0f, m_height / 2.0f);
+//        rect->setPosition(top_left.x + m_width / 2.0f, top_left.y + m_height / 2.0f);
 //        rect->setFillColor(color);
 //
 //        return rect;
@@ -87,19 +87,19 @@ class CircleConstraint : public Constraint {
 //class WallConstraint : public Constraint {
 // public:
 //    sf::Vector2f top_left;
-//    float width;
-//    float height;
-//    WallConstraint(const sf::Vector2f top_left, const float width, const float height): top_left{top_left}, width{width}, height{height} {
+//    float m_width;
+//    float m_height;
+//    WallConstraint(const sf::Vector2f top_left, const float m_width, const float m_height): top_left{top_left}, m_width{m_width}, m_height{m_height} {
 //        color = sf::Color::White;
 //    }
 //
 //    void apply(Body* &obj, float dt) override {
 //        if (auto* circle = dynamic_cast<CircleObject*>(obj)) {
 //            const sf::Vector2f pos = circle->position;
-//            const sf::Vector2f half_size = {width * 0.5f, height * 0.5f};
-//            const sf::Vector2f top_right = top_left + sf::Vector2f{width, 0.f};
-//            const sf::Vector2f bottom_left = top_left + sf::Vector2f{0.f, height};
-//            const sf::Vector2f bottom_right = top_left + sf::Vector2f{width, height};
+//            const sf::Vector2f half_size = {m_width * 0.5f, m_height * 0.5f};
+//            const sf::Vector2f top_right = top_left + sf::Vector2f{m_width, 0.f};
+//            const sf::Vector2f bottom_left = top_left + sf::Vector2f{0.f, m_height};
+//            const sf::Vector2f bottom_right = top_left + sf::Vector2f{m_width, m_height};
 //
 //            const sf::Vector2f closest = {
 //                std::clamp(pos.x, top_left.x, top_right.x),
@@ -124,10 +124,10 @@ class CircleConstraint : public Constraint {
 //        }
 //        else if (auto* rect = dynamic_cast<RectangleObject*>(obj)) {
 //            const sf::Vector2f pos = rect->position;
-//            const sf::Vector2f half_size = {width * 0.5f, height * 0.5f};
-//            const sf::Vector2f top_right = top_left + sf::Vector2f{width, 0.f};
-//            const sf::Vector2f bottom_left = top_left + sf::Vector2f{0.f, height};
-//            const sf::Vector2f bottom_right = top_left + sf::Vector2f{width, height};
+//            const sf::Vector2f half_size = {m_width * 0.5f, m_height * 0.5f};
+//            const sf::Vector2f top_right = top_left + sf::Vector2f{m_width, 0.f};
+//            const sf::Vector2f bottom_left = top_left + sf::Vector2f{0.f, m_height};
+//            const sf::Vector2f bottom_right = top_left + sf::Vector2f{m_width, m_height};
 //
 //            const sf::Vector2f closest = {
 //                std::clamp(pos.x, top_left.x, top_right.x),
@@ -139,9 +139,9 @@ class CircleConstraint : public Constraint {
 //
 //            // Check if the circle is inside the rectangle
 //            // If it is, circle bounce off the rectangle and reflect the velocity using position because of verlet integration
-//            if (dist < rect->width * 0.5f) {
+//            if (dist < rect->m_width * 0.5f) {
 //                const sf::Vector2f u = Math::normalize(dx);
-//                rect->position = closest + u * (rect->width * 0.5f);
+//                rect->position = closest + u * (rect->m_width * 0.5f);
 //
 //                // 튕겨나오게
 //                const sf::Vector2f v = rect->vel(dt);
@@ -151,10 +151,10 @@ class CircleConstraint : public Constraint {
 //    }
 //
 //    sf::Drawable* render() override {
-//        // top_left, width, height
-//        auto* rect = new sf::RectangleShape({width, height});
-//        rect->setOrigin(width * 0.5f, height * 0.5f);
-//        rect->setPosition(top_left + sf::Vector2f{width * 0.5f, height * 0.5f});
+//        // top_left, m_width, m_height
+//        auto* rect = new sf::RectangleShape({m_width, m_height});
+//        rect->setOrigin(m_width * 0.5f, m_height * 0.5f);
+//        rect->setPosition(top_left + sf::Vector2f{m_width * 0.5f, m_height * 0.5f});
 //        rect->setFillColor(color);
 //
 //        return rect;

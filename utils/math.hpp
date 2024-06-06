@@ -36,6 +36,16 @@ struct Math {
 
         return vertex;
     }
+
+    template <typename T>
+    static float length(const sf::Vector2<T> &v) {
+        return std::sqrt(v.x * v.x + v.y * v.y);
+    }
+
+    template <typename T>
+    static float lengthSquared(const sf::Vector2<T> &v) {
+        return v.x * v.x + v.y * v.y;
+    }
 };
 
 // ostream vector

@@ -4,8 +4,25 @@
 #include "../utils/math.hpp"
 
 struct Manifold {
+    Body* bodyA = nullptr;
+    Body* bodyB = nullptr;
+
     Vec2 normal;
-    float depth{};
+    float depth = 0.f;
+    Vec2 contact1;
+    Vec2 contact2;
+    uint32_t contact_count = 0;
+
+    Manifold() = default;
+    Manifold(Body* a, Body* b, Vec2 normal, float depth)
+        : bodyA(a), bodyB(b), normal(normal), depth(depth) {}
+    Manifold(Body* a, Body* b, Vec2 normal, float depth, Vec2 contact1, Vec2 contact2, uint32_t contact_count)
+        : bodyA(a), bodyB(b), normal(normal), depth(depth), contact1(contact1), contact2(contact2), contact_count(contact_count) {}
+
+    void setBody(Body* a, Body* b) {
+        bodyA = a;
+        bodyB = b;
+    }
 };
 
 class Collisions {
@@ -31,19 +48,19 @@ class Collisions {
         return {std::min(p1, p2), std::max(p1, p2)};
     }
 
-    static void resolveCollision(Body& bodyA, Body& bodyB, Vec2 n, float depth) {
-        Vec2 v_ab = bodyB.velocity - bodyA.velocity;
-        if (v_ab * n > 0.f)
+    static void resolveCollision(Manifold& manifold) {
+        Vec2 v_ab = manifold.bodyB->velocity() - manifold.bodyA->velocity();
+        if (v_ab * manifold.normal > 0.f)
             return;
 
-        float e = bodyA.material.restitution * bodyB.material.restitution;
-        float inv_m_a = bodyA.inverseMass();
-        float inv_m_b = bodyB.inverseMass();
+        float e = manifold.bodyA->material().restitution * manifold.bodyB->material().restitution;
+        float inv_m_a = manifold.bodyA->inverseMass();
+        float inv_m_b = manifold.bodyB->inverseMass();
 
-        float j = -((1 + e) * v_ab * n) / (n * n * (inv_m_a + inv_m_b));
+        float j = -((1 + e) * v_ab * manifold.normal) / (manifold.normal * manifold.normal * (inv_m_a + inv_m_b));
 
-        bodyA.velocity = bodyA.velocity - (j * inv_m_a) * n;
-        bodyB.velocity = bodyB.velocity + (j * inv_m_b) * n;
+        manifold.bodyA->setVelocity(manifold.bodyA->velocity() - (j * inv_m_a) * manifold.normal);
+        manifold.bodyB->setVelocity(manifold.bodyB->velocity() + (j * inv_m_b) * manifold.normal);
 //        std::cout << j << "|" << bodyA.velocity << "|" << bodyB.velocity << std::endl;
     }
 

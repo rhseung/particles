@@ -4,11 +4,11 @@
 
 class Material {
  public:
-    float density;
-    float restitution;
-    float us;   // static friction
-    float uk;   // kinetic friction
-    sf::Color color;
+    const float density;
+    const float restitution;
+    const float us;   // static friction
+    const float uk;   // kinetic friction
+    const sf::Color color;
 
     Material(float density, float restitution, float us, float uk, sf::Color color)
         : density{density}, restitution{restitution}, us{us}, uk{uk}, color{color} {}

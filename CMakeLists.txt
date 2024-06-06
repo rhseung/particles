@@ -4,8 +4,8 @@ project(particles)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(particles
-        examples/plane.cpp
-#        examples/gravity_test.cpp
+#        examples/plane.cpp
+        examples/gravity_test.cpp
 )
 
 # SFML

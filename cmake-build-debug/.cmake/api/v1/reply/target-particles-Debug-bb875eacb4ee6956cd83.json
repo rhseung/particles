@@ -130,7 +130,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "examples/plane.cpp",
+			"path" : "examples/gravity_test.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
