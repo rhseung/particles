@@ -21,21 +21,25 @@ int main() {
     auto &floor = solver.addBody(new RectangleBody({window_size.x / 2, 3 * window_size.y / 4},
                                                    700.f,
                                                    70.f,
-                                                   Materials::rubber));
+                                                   Materials::ideal));
     floor.setColor(sf::Color::Black).setStatic(true);
 
     evm.addMousePressedCallback(sf::Mouse::Left, [&](sf::Event event) {
 //        if (solver.getBodyCount() % 2 == 0)
 //            solver.addBody(new RectangleBody({(float) event.mouseButton.x, (float) event.mouseButton.y},
-//                                             RNGf::getRange(20.f, 35.f),
-//                                             RNGf::getRange(20.f, 35.f),
-//                                             Materials::rubber)).setColor(getRainbow(solver.getTime()));
+//                                         RNGf::getRange(20.f, 35.f),
+//                                         RNGf::getRange(20.f, 35.f),
+//                                         Materials::ideal)).setColor(getRainbow(solver.getTime()));
 //        else
         solver.addBody(new CircleBody({(float) event.mouseButton.x, (float) event.mouseButton.y},
-                                      RNGf::getRange(10.f, 20.f),
-                                      Materials::rubber)).setColor(getRainbow(solver.getTime()));
+                                  RNGf::getRange(10.f, 20.f),
+                                  Materials::ideal)).setColor(getRainbow(solver.getTime()));
 
         std::cout << solver.getBodyCount() << std::endl;
+    });
+
+    renderer.addText([&solver]() {
+        return std::format("Bodies: {}", solver.getBodyCount());
     });
 
     sf::Clock clock;

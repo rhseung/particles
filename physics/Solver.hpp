@@ -15,6 +15,7 @@ class Solver {
     Vec2 gravity;
     List<Body*> body_list;
     List<Constraint*> constraint_list;
+    List<Manifold> manifolds;
     uint32_t sub_steps = 1;
     float time = 0.f;
     float frame_dt = 0.f;
@@ -27,10 +28,13 @@ class Solver {
     }
 
     void resolveCollisions(float dt) {
-        List<Manifold> manifolds;
+        manifolds.clear();
 
         for (unsigned int i = 0; i < body_list.size(); i++) {
             for (unsigned int j = i + 1; j < body_list.size(); j++) {
+                if (body_list[i]->isStatic() && body_list[j]->isStatic())
+                    continue;
+
                 if (body_list[i]->shape() == ShapeType::CIRCLE) {
                     auto obj1 = dynamic_cast<CircleBody*>(body_list[i]);
 
@@ -124,12 +128,8 @@ class Solver {
     }
 
     void applyConstraints() {
-        for (Body *obj : body_list) {
-            if (!obj->isStatic()) {
-                for (Constraint *constraint : constraint_list) {
-                    constraint->apply(obj, getStepDt());
-                }
-            }
+        for (Constraint *constraint : constraint_list) {
+            constraint->apply();
         }
     }
 
@@ -141,7 +141,7 @@ class Solver {
 
  public:
     Solver() = default;
-    explicit Solver(Vec2 gravity, unsigned int sub_steps = 1, uint32_t fps = 120): gravity{gravity}, sub_steps{sub_steps}, frame_dt{1.0f / static_cast<float>(fps)} {}
+    explicit Solver(Vec2 gravity, uint32_t sub_steps = 1, uint32_t fps = 120): gravity{gravity}, sub_steps{sub_steps}, frame_dt{1.0f / static_cast<float>(fps)} {}
 
     void update() {
         time += frame_dt;
@@ -184,6 +184,11 @@ class Solver {
     }
 
     [[nodiscard]]
+    const List<Manifold> &getManifolds() const {
+        return manifolds;
+    }
+
+    [[nodiscard]]
     uint64_t getBodyCount() const {
         return body_list.size();
     }
@@ -207,8 +212,8 @@ class Solver {
         return false;
     }
 
-    Body& getBody(uint32_t index) {
-        return *body_list[index];
+    Body* getBody(uint32_t index) {
+        return body_list[index];
     }
 
     void addConstraint(Constraint* constraint) {
@@ -224,8 +229,8 @@ class Solver {
         return false;
     }
 
-    Constraint& getConstraint(uint32_t index) {
-        return *constraint_list[index];
+    Constraint* getConstraint(uint32_t index) {
+        return constraint_list[index];
     }
 
 };

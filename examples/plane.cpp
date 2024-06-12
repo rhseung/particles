@@ -28,16 +28,17 @@ int main() {
         float x = RNGf::getRange(margin, window_width - margin);
         float y = RNGf::getRange(margin, window_height - margin);
         if (i % 6 == 0)
-            solver.addBody(new CircleBody({x, y}, circle_radius, Materials::rubber, getRainbow(i)));
+            solver.addBody(new RectangleBody({x, y}, RNGf::getRange(circle_radius, 3*circle_radius), RNGf::getRange(circle_radius, 3*circle_radius), Materials::ideal)).setColor(getRainbow(i));
         else
-            solver.addBody(new RegularPolygonBody({x, y}, circle_radius, i % 6 + 2, Materials::rubber, getRainbow(i)));
+            solver.addBody((new RegularPolygonBody({x, y}, circle_radius, i % 6 + 2, Materials::ideal))).setColor(getRainbow(i));
     }
 
-    auto& obj = solver.addBody(new CircleBody({static_cast<float>(window_width) / 2, static_cast<float>(window_height) / 2}, circle_radius, Materials::rubber, sf::Color::Black));
-//    auto& obj = solver.addBody(new RectangleBody({static_cast<float>(window_width) / 2, static_cast<float>(window_height) / 2},2 * circle_radius,2 * circle_radius,Materials::rubber,sf::Color::Black));
-    obj.setMaxSpeed(150.f);
+//    auto& obj = solver.addBody(new CircleBody({static_cast<float>(window_width) / 2, static_cast<float>(window_height) / 2}, circle_radius, Materials::ideal));
+    auto& obj = solver.addBody(new RectangleBody({static_cast<float>(window_width) / 2, static_cast<float>(window_height) / 2},2 * circle_radius,4 * circle_radius,Materials::ideal));
+    obj.setColor(sf::Color::White);
+//    obj.setMaxSpeed(200.f);
 
-    auto& rect = solver.addBody(new RectangleBody({static_cast<float>(window_width) / 2, 500.f}, 500.f, 100.f, Materials::rubber, sf::Color::Black, true));
+    auto& rect = solver.addBody(new RectangleBody({static_cast<float>(window_width) / 2, 500.f}, 500.f, 100.f, Materials::ideal)).setColor(sf::Color::Black).setStatic(true);
 
     sf::Clock clock;
     while (window.isOpen()) {
@@ -48,6 +49,15 @@ int main() {
             }
             if (event.type == sf::Event::MouseWheelScrolled) {
                 obj.rotate(event.mouseWheelScroll.delta * 0.1f);
+            }
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                Vec2 pos = {static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)};
+                std::for_each(solver.getBodyList().begin(), solver.getBodyList().end(), [&pos](Body* body) {
+                    if (body->contains(pos)) {
+                        body->setColor(sf::Color::Green);
+                        std::cout << body->isConvex() << std::endl;
+                    }
+                });
             }
         }
 
@@ -60,7 +70,7 @@ int main() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) dx++;
 
         auto force = force_magnitude * Math::normalize(Vec2{dx, dy});
-        obj.applyForce(force);
+        obj.addForce(force);
 
         evm.processEvents();
         solver.update();

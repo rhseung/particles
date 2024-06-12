@@ -7,11 +7,11 @@
 #include "Material.hpp"
 #include "Shape.hpp"
 #include "../../utils/math.hpp"
+#include "../../utils/colors.hpp"
 
 template<typename T>
 using List = std::vector<T>;
 using Vec2 = sf::Vector2f;
-constexpr float PI = std::numbers::pi_v<float>;
 
 class Body {
  protected:
@@ -25,6 +25,7 @@ class Body {
     const Material m_material;
     const ShapeType m_shape;
     sf::Color m_color = m_material.color;
+    sf::Color m_outline_color = whiteOrBlack(m_color);
     bool m_is_static = false;
     float m_max_speed = std::numeric_limits<float>::infinity();
     float m_max_angular_speed = std::numeric_limits<float>::infinity();
@@ -162,10 +163,19 @@ class Body {
 
     Body& setColor(sf::Color color) {
         m_color = color;
+        m_outline_color = whiteOrBlack(color);
         return *this;
     }
     [[nodiscard]] sf::Color color() const {
         return m_color;
+    }
+
+    Body& setOutlineColor(sf::Color color) {
+        m_outline_color = color;
+        return *this;
+    }
+    [[nodiscard]] sf::Color outlineColor() const {
+        return m_outline_color;
     }
 
     Body& setStatic(bool is_static) {
@@ -208,6 +218,11 @@ class Body {
     Body& rotateTo(float angle) {
         return setAngle(angle);
     }
+    virtual bool contains(Vec2 point) = 0;
+    [[nodiscard]] virtual bool isConvex() const = 0;
+    [[nodiscard]] bool isConcave() const {
+        return !isConvex();
+    }
 
     // etc
     [[nodiscard]] float speed() const {
@@ -231,6 +246,13 @@ class CircleBody : public Body {
     CircleBody(Vec2 position, float radius, Material material)
         : Body{position, material, ShapeType::CIRCLE}, m_radius{radius} {}
 
+    [[nodiscard]] bool isConvex() const override {
+        return true;
+    }
+    bool contains(Vec2 point) override {
+        return std::abs(position() - point) <= radius();
+    }
+
     [[nodiscard]] float radius() const {
         return m_radius;
     }
@@ -249,19 +271,15 @@ class CircleBody : public Body {
         circle->setPosition(position());
         circle->setFillColor(color());
         circle->setOutlineThickness(2.f);
-        if (isStatic())
-            circle->setOutlineColor(sf::Color{70, 70, 70});
+        circle->setOutlineColor(outlineColor());
 
         auto *line = new sf::RectangleShape({radius() - 1, 1.f});
         line->setOrigin(0.f, 0.5f);
         line->setPosition(position());
-        line->setFillColor(sf::Color::White);
-        line->setRotation(angle() * 180.f / PI);
+        line->setFillColor(outlineColor());
+        line->setRotation(angle() * 180.f / Math::PI);
         line->setOutlineThickness(0.5f);
-        if (isStatic()) {
-            line->setOutlineColor(sf::Color{70, 70, 70});
-            line->setFillColor(sf::Color{70, 70, 70});
-        }
+        line->setOutlineColor(outlineColor());
 
         return {circle, line};
     }
@@ -284,7 +302,75 @@ class PolygonBody : public Body {
  public:
     PolygonBody(Vec2 position, List<Vec2> vertices, Material material)
         : Body{position, material, ShapeType::POLYGON}, m_vertices{std::move(vertices)} {
-        setAngle(PI / 2);
+        setAngle(Math::PI / 2);
+    }
+
+    [[nodiscard]] bool isConvex() const override {
+        for (int i = 0; i < m_vertices.size(); ++i) {
+            Vec2 p1 = m_vertices[i];
+            Vec2 p2 = m_vertices[(i + 1) % m_vertices.size()];
+            Vec2 p3 = m_vertices[(i + 2) % m_vertices.size()];
+
+            if (Math::ccw(p1, p2, p3) < 0)
+                return false;
+        }
+
+        return true;
+    }
+    bool contains(Vec2 point) override {
+        // https://anz1217.tistory.com/107
+        if (isConcave()) {
+            int count = 0;
+            for (int i = 0; i < m_vertices.size(); ++i) {
+                Vec2 p1 = m_vertices[i];
+                Vec2 p2 = m_vertices[(i + 1) % m_vertices.size()];
+
+                if (p1.y < p2.y)
+                    std::swap(p1, p2);
+
+                Vec2 v1 = point - p1;
+                Vec2 v2 = p2 - point;
+
+                int ccw = Math::ccw(p1, p2);
+                if (ccw == 0) {
+                    if (std::min(p1.x, p2.x) <= point.x && point.x <= std::max(p1.x, p2.x)
+                        && std::min(p1.y, p2.y) <= point.y && point.y <= std::max(p1.y, p2.y))
+                        return true;
+                }
+
+                if (std::max(p1.x, p2.x) < point.x) continue;
+                if (p1.y <= point.y) continue;
+                if (point.y < p2.y) continue;
+                if (ccw > 0) count++;
+            }
+
+            return count % 2 == 1;
+        }
+        else {
+            Vec2 vec_l = m_vertices[sides() - 1] - m_vertices[0];
+            Vec2 vec_r = m_vertices[1] - m_vertices[0];
+            Vec2 vec_p = point - m_vertices[0];
+
+            if (Math::ccw(vec_l, vec_p) > 0)
+                return false;
+            if (Math::ccw(vec_r, vec_p) < 0)
+                return false;
+
+            int l = 1, r = sides() - 1;
+            while (l + 1 < r) {
+                int mid = (l + r) / 2;
+                Vec2 vec_m = m_vertices[mid] - m_vertices[0];
+                if (Math::ccw(vec_m, vec_p) > 0)
+                    l = mid;
+                else
+                    r = mid;
+
+            }
+
+            Vec2 v1 = point - m_vertices[l];
+            Vec2 v2 = m_vertices[l + 1] - point;
+            return Math::ccw(v1, v2) < 0;
+        }
     }
 
     [[nodiscard]] List<Vec2> vertices() const {
@@ -323,9 +409,7 @@ class PolygonBody : public Body {
         auto *poly = new sf::ConvexShape(sides());
         poly->setFillColor(color());
         poly->setOutlineThickness(2.f);
-
-        if (isStatic())
-            poly->setOutlineColor(sf::Color{70, 70, 70});
+        poly->setOutlineColor(outlineColor());
 
         for (int i = 0; i < m_vertices.size(); ++i) {
             auto n = Math::normalize(m_vertices[i] - position());
@@ -344,7 +428,24 @@ class RectangleBody : public PolygonBody {
         : PolygonBody{position, {}, material}, m_width{width}, m_height{height} {
         const sf::Vector2f h = heightVec();
         const sf::Vector2f w = widthVec();
-        m_vertices = {position + h + w, position + h - w, position - h - w, position - h + w};
+        m_vertices = {position - h + w, position + h + w, position + h - w, position - h - w};  // 반시계방향
+    }
+
+    [[nodiscard]] bool isConvex() const override {
+        return true;
+    }
+    bool contains(Vec2 point) override {
+        Vec2 p1 = m_vertices[0];
+        Vec2 p2 = m_vertices[1];
+        Vec2 p3 = m_vertices[2];
+        Vec2 p4 = m_vertices[3];
+
+        if (Math::ccw(p1, p2, point) < 0) return false;
+        if (Math::ccw(p2, p3, point) < 0) return false;
+        if (Math::ccw(p3, p4, point) < 0) return false;
+        if (Math::ccw(p4, p1, point) < 0) return false;
+
+        return true;
     }
 
     [[nodiscard]] float width() const {
@@ -379,24 +480,28 @@ class RegularPolygonBody : public PolygonBody {
             throw std::invalid_argument("RegularPolygonBody: sides must be >= 3");
 
         for (uint64_t i = 0; i < sides; ++i) {
-            float angle = 2.f * PI * (float)i / sides;
+            float angle = 2.f * Math::PI * (float)i / sides;
             m_vertices.emplace_back(position + radius * Vec2{std::cos(angle), std::sin(angle)});
         }
+    }
+
+    [[nodiscard]] bool isConvex() const override {
+        return true;
     }
 
     [[nodiscard]] float radius() const {
         return m_radius;
     }
     [[nodiscard]] float length() const {
-        return 2.f * m_radius * std::sin(PI / sides());
+        return 2.f * m_radius * std::sin(Math::PI / sides());
     }
 
     [[nodiscard]] float mass() const override {
-        return std::max(Body::mass(), m_material.density * m_radius * m_radius * sides() * std::sin(PI / sides()));
+        return std::max(Body::mass(), m_material.density * m_radius * m_radius * sides() * std::sin(Math::PI / sides()));
     }
     [[nodiscard]] float inertia() const override {
         // ref: https://m.blog.naver.com/PostView.naver?blogId=gks36247&logNo=221548621791&fromRecommendationType=category&targetRecommendationDetailCode=1000
-        float tan = std::tan(PI / sides());
+        float tan = std::tan(Math::PI / sides());
         float beta = 1.f/8 * (1.f/3 + 1.f/(tan*tan));
         return beta * mass() * length() * length();
     }

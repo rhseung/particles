@@ -53,7 +53,7 @@ int main() {
         if (solver.getObjectsCount() < max_objects_count && clock.getElapsedTime().asSeconds() >= object_spawn_delay) {
             clock.restart();
             Material materials[] = {
-                Materials::wood, Materials::rubber, Materials::metal, Materials::ice, Materials::glass,
+                Materials::wood, Materials::ideal, Materials::metal, Materials::ice, Materials::glass,
                 Materials::stone, Materials::sand, Materials::paper, Materials::plastic, Materials::diamond,
                 Materials::gold, Materials::silver, Materials::copper
             };

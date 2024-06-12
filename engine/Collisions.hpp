@@ -62,14 +62,16 @@ class Collisions {
         manifold.bodyA->setVelocity(manifold.bodyA->velocity() - (j * inv_m_a) * manifold.normal);
         manifold.bodyB->setVelocity(manifold.bodyB->velocity() + (j * inv_m_b) * manifold.normal);
 //        std::cout << j << "|" << bodyA.velocity << "|" << bodyB.velocity << std::endl;
+
+//        manifold.bodyA->setAngularVelocity()
     }
 
-    static int findClosestPoint(Vec2 center, List<Vec2> vertices) {
+    static int findClosestPoint(Vec2 point, List<Vec2> vertices) {
         float min_dist = std::numeric_limits<float>::infinity();
         int closest = 0;
 
         for (int i = 0; i < vertices.size(); ++i) {
-            float dist = std::abs(center - vertices[i]);
+            float dist = std::abs(point - vertices[i]);
             if (dist < min_dist) {
                 min_dist = dist;
                 closest = i;
@@ -80,12 +82,17 @@ class Collisions {
     }
 
     static bool intersectCircles(Vec2 center_a, float radius_a, Vec2 center_b, float radius_b, Manifold &out) {
-        float dist = std::abs(center_a - center_b);
+        Vec2 ab = center_b - center_a;
+
+        float dist = std::abs(ab);
         if (dist >= radius_a + radius_b)
             return false;
 
-        out.normal = Math::normalize(center_b - center_a);
+        out.normal = Math::normalize(ab);
         out.depth = (radius_a + radius_b) - dist;
+        out.contact_count = 1;
+        out.contact1 = center_a + out.normal * radius_a;
+
         return true;
     }
 

@@ -28,4 +28,5 @@ const Material diamond{3.5f, 0.1f, 0.1f, 0.05f, sf::Color{185, 242, 255}};
 const Material gold{19.3f, 0.1f, 0.1f, 0.05f, sf::Color{255, 215, 0}};
 const Material silver{10.5f, 0.1f, 0.1f, 0.05f, sf::Color{192, 192, 192}};
 const Material copper{8.9f, 0.1f, 0.1f, 0.05f, sf::Color{ 184, 115, 51 }};
+const Material ideal{1.0f, 1.0f, 0.0f, 0.0f, sf::Color::White};
 };

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <format>
 
 #include "physics/Solver.hpp"
 #include "renderer/Renderer.hpp"
