@@ -128,8 +128,10 @@ class Solver {
     }
 
     void applyConstraints() {
-        for (Constraint *constraint : constraint_list) {
-            constraint->apply();
+        for (uint32_t i = 4; i--;) {
+            for (Constraint *constraint : constraint_list) {
+                constraint->apply();
+            }
         }
     }
 

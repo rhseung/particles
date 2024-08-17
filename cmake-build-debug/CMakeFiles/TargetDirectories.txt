@@ -1,3 +1,5 @@
 D:/code-hub/particles/cmake-build-debug/CMakeFiles/particles.dir
+D:/code-hub/particles/cmake-build-debug/CMakeFiles/package.dir
+D:/code-hub/particles/cmake-build-debug/CMakeFiles/package_source.dir
 D:/code-hub/particles/cmake-build-debug/CMakeFiles/edit_cache.dir
 D:/code-hub/particles/cmake-build-debug/CMakeFiles/rebuild_cache.dir

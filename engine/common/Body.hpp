@@ -12,6 +12,7 @@
 template<typename T>
 using List = std::vector<T>;
 using Vec2 = sf::Vector2f;
+using Vec3 = sf::Vector3f;
 
 class Body {
  protected:

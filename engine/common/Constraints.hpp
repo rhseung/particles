@@ -18,7 +18,7 @@ class Chain : public Constraint {
     Body* body_2;
     float target_dist;
 
-    Chain(Body* body_1, Body* body_2, float dist): body_1{body_1}, body_2{body_2}, target_dist{dist} {}
+    Chain(Body* body_1, Body* body_2): body_1{body_1}, body_2{body_2}, target_dist{Math::length(body_1->position() - body_2->position())} {}
 
     void apply() override {
         Vec2 p1 = body_1->position();
@@ -26,15 +26,23 @@ class Chain : public Constraint {
 
         Vec2 d = p1 - p2;
         float dist = std::abs(d);
-        Vec2 n = d / dist;
-//        std::cout << "normal of " << body_1->isStatic() << "," << body_2->isStatic() << ": " << n << std::endl;
 
-        float delta = target_dist - dist;
-        float obj1_ratio = body_2->isStatic() ? 1.f : 1.f / (1.f + body_1->mass() / body_2->mass());
-        float obj2_ratio = body_1->isStatic() ? 1.f : 1.f / (1.f + body_2->mass() / body_1->mass());
+        if (dist > target_dist) {
+//            std::cout << p1 << " " << p2 << " " << dist << " " << target_dist << std::endl;
 
-        body_1->move(obj1_ratio * delta * n);
-        body_2->move(-obj2_ratio * delta * n);
+            Vec2 n = d / dist;
+            float delta = target_dist - dist;
+
+            if (body_1->isStatic()) {
+                body_2->move(-n * delta);
+            }
+            else if (body_2->isStatic())
+                body_1->move(n * delta);
+            else {
+                body_1->move(n * delta * 0.5f);
+                body_2->move(-n * delta * 0.5f);
+            }
+        }
     }
 
     std::vector<sf::Drawable*> render() override {

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <utility>
+#include <NumCpp.hpp>
 
 template <typename T>
 class Matrix {

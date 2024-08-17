@@ -1,4 +1,5 @@
 #include "../Particles.hpp"
+#include <SFML/Mat
 
 int main() {
     const Vec2 window_size{1000.f, 800.f};
@@ -23,6 +24,8 @@ int main() {
                                                    70.f,
                                                    Materials::ideal));
     floor.setColor(sf::Color::Black).setStatic(true);
+
+    sf::
 
     evm.addMousePressedCallback(sf::Mouse::Left, [&](sf::Event event) {
 //        if (solver.getBodyCount() % 2 == 0)
