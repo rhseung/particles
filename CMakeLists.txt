@@ -3,8 +3,10 @@ project(particles)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(particles
-        examples/circle.cpp
-        math/Vector.hpp)
+#        examples/cuesports.cpp
+#        examples/gravity_test.cpp
+        examples/plane.cpp
+)
 
 set(SFML_STATIC_LIBRARIES TRUE)
 set(SFML_ROOT "D:/tools/SFML-2.6.1/lib/cmake/SFML")

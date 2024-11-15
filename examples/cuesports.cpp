@@ -102,13 +102,13 @@ int main() {
         }
 
         return std::format("Kinetic Energy: {:.2f}", energy);
-    }, sf::Color::Black);
+    }, sf::Color::White);
 
     sf::Clock clock;
     while (window.isOpen()) {
         evm.processEvents();
         solver.update();
-        window.clear(sf::Color::White);
+        window.clear(sf::Color::Black);
         renderer.render(solver);
 
         if (is_dragging) {

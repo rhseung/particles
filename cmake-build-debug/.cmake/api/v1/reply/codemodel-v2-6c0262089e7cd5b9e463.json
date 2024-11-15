@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "particles::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-particles-Debug-4bd79545be4ce63fe0c4.json",
+					"jsonFile" : "target-particles-Debug-b32ab2885e0a6de8603b.json",
 					"name" : "particles",
 					"projectIndex" : 0
 				}
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "D:/code-hub/particles/cmake-build-debug",
-		"source" : "D:/code-hub/particles"
+		"build" : "D:/Repo/particles/cmake-build-debug",
+		"source" : "D:/Repo/particles"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 6
+		"minor" : 7
 	}
 }

@@ -4,38 +4,38 @@
 		"generator" : 
 		{
 			"multiConfig" : false,
-			"name" : "Ninja"
+			"name" : "MinGW Makefiles"
 		},
 		"paths" : 
 		{
 			"cmake" : "C:/Users/rhseung/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/cmake.exe",
 			"cpack" : "C:/Users/rhseung/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/cpack.exe",
 			"ctest" : "C:/Users/rhseung/AppData/Local/Programs/CLion/bin/cmake/win/x64/bin/ctest.exe",
-			"root" : "C:/Users/rhseung/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.28"
+			"root" : "C:/Users/rhseung/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-3.29"
 		},
 		"version" : 
 		{
 			"isDirty" : false,
 			"major" : 3,
-			"minor" : 28,
-			"patch" : 1,
-			"string" : "3.28.1",
+			"minor" : 29,
+			"patch" : 6,
+			"string" : "3.29.6",
 			"suffix" : ""
 		}
 	},
 	"objects" : 
 	[
 		{
-			"jsonFile" : "codemodel-v2-d73c99591a18e047c01a.json",
+			"jsonFile" : "codemodel-v2-6c0262089e7cd5b9e463.json",
 			"kind" : "codemodel",
 			"version" : 
 			{
 				"major" : 2,
-				"minor" : 6
+				"minor" : 7
 			}
 		},
 		{
-			"jsonFile" : "cache-v2-f3e8091a8d06ef6b0cfc.json",
+			"jsonFile" : "cache-v2-94cbddef83f9738eb24b.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -44,7 +44,7 @@
 			}
 		},
 		{
-			"jsonFile" : "cmakeFiles-v1-09c36f011302aa232eb5.json",
+			"jsonFile" : "cmakeFiles-v1-cb4b2d00ed26430ccd02.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -66,7 +66,7 @@
 	{
 		"cache-v2" : 
 		{
-			"jsonFile" : "cache-v2-f3e8091a8d06ef6b0cfc.json",
+			"jsonFile" : "cache-v2-94cbddef83f9738eb24b.json",
 			"kind" : "cache",
 			"version" : 
 			{
@@ -76,7 +76,7 @@
 		},
 		"cmakeFiles-v1" : 
 		{
-			"jsonFile" : "cmakeFiles-v1-09c36f011302aa232eb5.json",
+			"jsonFile" : "cmakeFiles-v1-cb4b2d00ed26430ccd02.json",
 			"kind" : "cmakeFiles",
 			"version" : 
 			{
@@ -86,12 +86,12 @@
 		},
 		"codemodel-v2" : 
 		{
-			"jsonFile" : "codemodel-v2-d73c99591a18e047c01a.json",
+			"jsonFile" : "codemodel-v2-6c0262089e7cd5b9e463.json",
 			"kind" : "codemodel",
 			"version" : 
 			{
 				"major" : 2,
-				"minor" : 6
+				"minor" : 7
 			}
 		},
 		"toolchains-v1" : 

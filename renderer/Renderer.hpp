@@ -15,7 +15,7 @@ class Renderer {
 
  public:
     explicit Renderer(sf::RenderTarget &target): target{target} {
-        font.loadFromFile(R"(D:\code-hub\particles\resource\CascadiaCode-Regular.otf)");
+        font.loadFromFile(R"(D:\Repo\particles\resource\CascadiaCode-Regular.otf)");
     }
 
     void setFont(const std::string &path) {

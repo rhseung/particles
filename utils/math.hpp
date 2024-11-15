@@ -1,7 +1,9 @@
 #pragma once
 #include <cmath>
 #include <SFML/System/Vector2.hpp>
-#include <NumCpp.hpp>
+#include <format>
+#include <string>
+// #include <NumCpp.hpp>
 
 struct Math {
     static constexpr float PI = std::numbers::pi_v<float>;

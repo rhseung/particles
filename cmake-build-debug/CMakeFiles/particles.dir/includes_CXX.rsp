@@ -1,0 +1,1 @@
+-I"D:/Repo/particles/D/tools/SFML-2.6.1/include" -ID:/Repo/particles/utils -ID:/Repo/particles/engine -ID:/Repo/particles/renderer -ID:/Repo/particles/physics -isystem "D:/Tools/SFML-2.6.1/include"
